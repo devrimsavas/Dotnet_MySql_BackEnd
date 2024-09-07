@@ -1,0 +1,48 @@
+
+# Ignore build output
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VSCode settings
+.vscode/
+
+# Rider settings
+.idea/
+
+# Entity Framework migrations history
+Migrations/
+
+# Packages and dependencies
+packages/
+*.nupkg
+*.snupkg
+
+# Logs and temp files
+*.log
+*.vspscc
+*.vssscc
+*.tmp
+**/*.DS_Store
+Thumbs.db
+
+# Runtime-generated files
+appsettings.json
+
+# Secrets and credentials
+appsettings.Development.json
+appsettings.Production.json
+
+# Ignore database-related files (if applicable)
+*.mdf
+*.ldf
+
+# Backup files
+*.bak
+*.swp
+*.swm

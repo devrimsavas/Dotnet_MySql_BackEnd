@@ -15,8 +15,8 @@ public class ToDo
     public DateTime? CompletedDate { get; set; }
 
     public int CategoryId { get; set; }  // Foreign key to Category
-    public Category Category { get; set; } //will come from category class
+    public Category Category { get; set; } = new Category(); //will come from category class
 
-    public int AssignedToUserId { get; set; }  // Foreign key to User
-    public User AssignedTo { get; set; } //will come from user class 
+    public int AssignedToUserId { get; set; } // Foreign key to User
+    public User AssignedTo { get; set; } = new User(); //will come from user class 
 }

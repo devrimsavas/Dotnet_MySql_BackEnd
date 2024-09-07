@@ -347,3 +347,21 @@ public class DatabaseInitializer
 }
 
 ```
+
+## 12 ADD Todo and Category Initializer
+
+the file  
+`ToDoInitializer.cs` will add first category and todo to database
+
+## 13 GET CRUD
+
+in following example it was shown how user can get TODOS but same approach can be used for users, todos, category and etc
+
+```bash
+//get all todos
+app.MapGet("/todos", async (AppDbContext db) =>
+{
+    var todos = await db.Todos.ToListAsync();
+    return Results.Ok(todos);
+});
+```
