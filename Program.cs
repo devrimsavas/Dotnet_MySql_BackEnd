@@ -150,6 +150,30 @@ app.MapPost("/newtodo", async (SqlConnection db, ToDo todo) =>
 
 });
 
+//new todo used EF CORE 
+app.MapPost("/newtodo-efcore", async (AppDbContext db, ToDo todo) =>
+{
+    try
+    {
+        todo.CreatedDate = DateTime.Now;
+        todo.UpdatedDate = DateTime.Now;
+
+        //add new todo
+        db.Todos.Add(todo);
+
+        //save 
+        await db.SaveChangesAsync();
+        return Results.Ok("NEW TODO CREATED EF CORE METHOD");
+
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"Error creating ToDo: {ex.Message}");
+
+    }
+});
+
+
 
 
 app.Run();
