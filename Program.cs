@@ -1,11 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1;
+//add also dapper 
+using Microsoft.Data.SqlClient;
+using Dapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add DbContext to the services
+// Add DbContext to the services for EF CORE 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+//ADD SqlConnection for Dapper USAGE 
+
+builder.Services.AddScoped<SqlConnection>(Sp =>
+    new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"))
+
+);
 
 var app = builder.Build();
 
@@ -46,14 +57,99 @@ app.MapGet("/categories", async (AppDbContext db) =>
 });
 
 
-//get all todos 
+//get all todos EFC 
 app.MapGet("/todos", async (AppDbContext db) =>
 {
     var todos = await db.Todos.ToListAsync();
     return Results.Ok(todos);
 });
 
-//search a query 
+
+//get all Todos Dapper 
+app.MapGet("/todos-dapper", async (SqlConnection db) =>
+{
+    //sql string 
+    var sql = @"SELECT * FROM Todos";
+    var todos = await db.QueryAsync<ToDo>(sql);
+    return Results.Ok(todos);
+});
+
+//search a query search query class inside SearchInputs 
+
+app.MapPost("/search-todos", async (SearchToDoInput searchInput, SqlConnection db) =>
+{
+    var sql = @"SELECT * FROM ToDos WHERE 1=1";  // Start with base query
+
+    // Dynamically build the query based on input
+    if (!string.IsNullOrEmpty(searchInput.Title))
+    {
+        sql += " AND Title LIKE @Title";
+    }
+
+    if (!string.IsNullOrEmpty(searchInput.Status))
+    {
+        sql += " AND Status = @Status";
+    }
+
+    if (!string.IsNullOrEmpty(searchInput.Description))
+    {
+        sql += " AND Description LIKE @Description";
+    }
+
+    // Perform the search with Dapper
+    var todos = await db.QueryAsync<ToDo>(sql, new
+    {
+        Title = $"%{searchInput.Title}%",
+        Status = searchInput.Status,
+        Description = $"%{searchInput.Description}%"
+    });
+
+    Console.WriteLine(todos);
+
+    return Results.Ok(todos);
+});
+
+//used dapper 
+app.MapPost("/newtodo", async (SqlConnection db, ToDo todo) =>
+{
+
+    try
+    {
+
+
+        // Insert query for the new ToDo
+        var sql = @"INSERT INTO Todos (Title, Description, Status, Priority, DueDate, CreatedDate, UpdatedDate, CategoryId, AssignedToUserId)
+                    VALUES (@Title, @Description, @Status, @Priority, @DueDate, @CreatedDate, @UpdatedDate, @CategoryId, @AssignedToUserId)";
+
+        //execute with Dapper 
+        var result = await db.ExecuteAsync(sql, new
+        {
+
+            todo.Title,
+            todo.Description,
+            todo.Status,
+            todo.Priority,
+            todo.DueDate,
+            CreatedDate = DateTime.Now,  // Set current timestamp
+            UpdatedDate = DateTime.Now,  // Set current timestamp
+            todo.CategoryId,
+            todo.AssignedToUserId
+        }
+
+        );
+        return Results.Ok("NEW TODO CREATED ");
+
+
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"Error creating ToDo: {ex.Message}");
+    }
+
+
+
+});
+
 
 
 app.Run();

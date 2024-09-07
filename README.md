@@ -365,3 +365,54 @@ app.MapGet("/todos", async (AppDbContext db) =>
     return Results.Ok(todos);
 });
 ```
+
+# IMPORTANT TIPS
+
+here in following part we used 2 different approachs were used
+
+- 1 GET ALL with ENTITY FRAME WORK
+
+```bash
+using Microsoft.EntityFrameworkCore;
+//..
+//..
+// Add DbContext to the services for EF CORE
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//..
+//..
+//get all todos EFC
+app.MapGet("/todos", async (AppDbContext db) =>
+{
+    var todos = await db.Todos.ToListAsync();
+    return Results.Ok(todos);
+});
+
+
+```
+
+- 2 GET ALL with DAPPER
+
+```bash
+using Microsoft.Data.SqlClient;
+using Dapper;
+//..
+//..
+//ADD SqlConnection for Dapper USAGE
+
+builder.Services.AddScoped<SqlConnection>(Sp =>
+    new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"))
+
+);
+
+//get all
+
+//get all Todos Dapper
+app.MapGet("/todos-dapper", async (SqlConnection db) =>
+{
+    //sql string
+    var sql = @"SELECT * FROM Todos";
+    var todos = await db.QueryAsync<ToDo>(sql);
+    return Results.Ok(todos);
+});
+```
