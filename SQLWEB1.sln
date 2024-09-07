@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLWEB1", "SQLWEB1.csproj", "{78FF84CA-F358-4EC0-ACFE-FCD83142A72B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78FF84CA-F358-4EC0-ACFE-FCD83142A72B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78FF84CA-F358-4EC0-ACFE-FCD83142A72B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78FF84CA-F358-4EC0-ACFE-FCD83142A72B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78FF84CA-F358-4EC0-ACFE-FCD83142A72B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C29FA1B8-4ABF-47FE-BF6D-49FE569CD4FE}
+	EndGlobalSection
+EndGlobal

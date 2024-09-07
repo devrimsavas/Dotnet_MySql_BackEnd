@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\SQLWEB1.props" />
+</Project>
