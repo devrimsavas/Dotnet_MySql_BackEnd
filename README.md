@@ -4,7 +4,9 @@
 
 ### Database initialize is created with `EF CORE CRUDS` are written with `Dapper`
 
-## IF YOU WANTED TO CREATE TABLES AND DATABASE MANUALLY JUMP TO STEP 2 AND THEN STEP 7**\*\***\*\***\*\***\*\*\***\*\***\*\***\*\***
+## IF YOU WANTED TO CREATE TABLES AND DATABASE MANUALLY JUMP TO STEP 2 AND THEN STEP 7
+
+## Please look at document DAPPERVSEFC to compare different CRUD Methods and their usages between DAPPER AND EF CORE
 
 # 1- INSTALL PACKAGES
 
