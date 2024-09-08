@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SQLWEB1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb04351ff92c7df2f17364637f1b81d33c77ef7d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1be76216138bad8e109d114a938db3322c9dd760")]
 [assembly: System.Reflection.AssemblyProductAttribute("SQLWEB1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SQLWEB1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

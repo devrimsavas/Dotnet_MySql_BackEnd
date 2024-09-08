@@ -262,6 +262,36 @@ app.MapGet("/todo-dapper/id", async (int id, SqlConnection db) =>
 
 });
 
+//PUt with Entity Frame Core 
+
+app.MapPut("/update/{id}", async (int id, AppDbContext db, ToDo inputTodo) =>
+{
+    try
+    {
+        var todo = await db.Todos.FindAsync(id);
+        if (todo is null) return Results.NotFound($"Todo with id: {id} was not found");
+
+        // Update fields
+        todo.Title = inputTodo.Title;
+        todo.Description = inputTodo.Description;
+        todo.Status = inputTodo.Status;
+        todo.Priority = inputTodo.Priority;
+        todo.DueDate = inputTodo.DueDate;
+        todo.UpdatedDate = DateTime.Now;  // Set updated timestamp
+        todo.CategoryId = inputTodo.CategoryId;
+        todo.AssignedToUserId = inputTodo.AssignedToUserId;
+
+        // Save the changes
+        await db.SaveChangesAsync();
+
+        return Results.Ok("Todo updated successfully.");
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"Problem updating ToDo: {ex.Message}");
+    }
+});
+
 
 
 
