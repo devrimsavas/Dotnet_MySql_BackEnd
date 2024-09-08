@@ -3,6 +3,7 @@ using Org.BouncyCastle.Asn1;
 //add also dapper 
 using Microsoft.Data.SqlClient;
 using Dapper;
+using MySqlX.XDevAPI.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,8 @@ using (var scope = app.Services.CreateScope())
     await DatabaseInitializer.InitializeAsync(db); //initialize Admin 
     await ToDoInitializer.InitializeAsync(db);
 }
+
+//ROUTES 
 
 app.MapGet("/", () => "Hello World!");
 
@@ -70,7 +73,7 @@ app.MapGet("/todos-dapper", async (SqlConnection db) =>
 {
     //sql string 
     var sql = @"SELECT * FROM Todos";
-    var todos = await db.QueryAsync<ToDo>(sql);
+    var todos = await db.QueryAsync<ToDo>(sql); //QueryAsync : we expect multiple rows from query REturn all rows as a collection
     return Results.Ok(todos);
 });
 
@@ -171,6 +174,92 @@ app.MapPost("/newtodo-efcore", async (AppDbContext db, ToDo todo) =>
         return Results.Problem($"Error creating ToDo: {ex.Message}");
 
     }
+});
+
+//new TODO DELETE WITH ENTITY FRAMEWORK CORE
+
+app.MapDelete("/delete/{id}", async (AppDbContext db, int id) =>
+{
+
+    try
+    {
+        if (await db.Todos.FindAsync(id) is ToDo todo)
+        {
+            db.Todos.Remove(todo);
+            await db.SaveChangesAsync();
+            return Results.Ok("To do deleted");
+        }
+        return Results.NotFound("this tood was not found");
+
+
+
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"Problem {ex.Message} ");
+    }
+
+});
+
+//DELETE WITH DAPPER 
+
+app.MapDelete("/delete-dapper/{id}", async (SqlConnection db, int id) =>
+{
+    try
+    {
+        var sql = "DELETE FROM Todos WHERE ToDoId = @Id";
+
+        var result = await db.ExecuteAsync(sql, new { Id = id });
+
+        if (result > 0)
+        {
+            return Results.Ok("ToDo deleted successfully");
+        }
+        else
+        {
+            return Results.NotFound("This ToDo was not found");
+        }
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"Problem {ex.Message}");
+    }
+});
+
+//GET ONE TODO BY ID EFC 
+
+app.MapGet("/todo/{id}", async (int id, AppDbContext db) =>
+    await db.Todos.FindAsync(id)
+    is ToDo toDo
+    ? Results.Ok(toDo)
+    : Results.NotFound($"There is not any todo with id  {id}"));
+
+
+
+//GET ONE TODO BY ID DAPPER 
+
+app.MapGet("/todo-dapper/id", async (int id, SqlConnection db) =>
+{
+    try
+    {
+        var sql = "SELECT * FROM Todos WHERE ToDoId=@Id";
+        var todo = await db.QuerySingleOrDefaultAsync<ToDo>(sql, new { Id = id });
+        if (todo != null)
+        {
+            return Results.Ok(todo);
+        }
+        else
+        {
+            return Results.NotFound("Not existed");
+        }
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+
+
+
 });
 
 
